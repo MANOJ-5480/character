@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE SYSTEM - Solo Leveling Dev System</title>
+    <meta name="description" content="A gamified training system for physical and mechanical engineering skills inspired by the Solo Leveling manhwa.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Grid & Scanline Background effects -->
+    <div class="system-grid-bg"></div>
+    <div class="system-scanlines"></div>
+    <div class="system-vignette"></div>
+
+    <!-- 1. AWAKENING GATES (LOADING GATE SCREEN) -->
+    <div id="awake-overlay" class="awake-overlay">
+        <div class="gate-portal">
+            <div class="portal-core"></div>
+            <div class="portal-ring"></div>
+        </div>
+        <div class="awake-content">
+            <h1 class="system-activation-title">SYSTEM ACTIVATION</h1>
+            <p class="system-subtext">Awaken your physical limits and master the laws of engineering mechanics.</p>
+            <div class="calibration-container">
+                <span class="calibration-label">SYSTEM PROTOCOL:</span>
+                <span class="calibration-value" id="calibration-text">READY FOR AWAKENING...</span>
+            </div>
+            <button id="awaken-btn" class="glowing-btn action-btn">
+                <span>AWAKEN AS HUNTER</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- 2. MAIN SYSTEM INTERFACE -->
+    <main id="main-hud" class="main-hud hidden">
+        
+        <!-- HEADER HUD -->
+        <header class="hud-header">
+            <div class="header-logo-section">
+                <div class="system-tag">[ THE SYSTEM ]</div>
+                <h1 class="hunter-name-display" id="hunter-name-title">HUNTER</h1>
+            </div>
+            
+            <div class="header-stats-quick">
+                <!-- Level Circle -->
+                <div class="lvl-container">
+                    <svg class="lvl-progress-ring" width="64" height="64">
+                        <circle class="ring-bg" cx="32" cy="32" r="28"></circle>
+                        <circle class="ring-bar" id="lvl-progress-bar" cx="32" cy="32" r="28"></circle>
+                    </svg>
+                    <div class="lvl-value" id="lvl-display">1</div>
+                </div>
+                
+                <div class="bars-container">
+                    <!-- XP Bar -->
+                    <div class="bar-wrapper">
+                        <div class="bar-label">
+                            <span>XP PROGRESS</span>
+                            <span id="xp-text">0 / 100</span>
+                        </div>
+                        <div class="progress-track xp-track">
+                            <div class="progress-fill xp-fill" id="xp-bar-fill" style="width: 0%;"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Fatigue Bar -->
+                    <div class="bar-wrapper">
+                        <div class="bar-label">
+                            <span>FATIGUE RATE</span>
+                            <span id="fatigue-text">0 / 100</span>
+                        </div>
+                        <div class="progress-track fatigue-track">
+                            <div class="progress-fill fatigue-fill" id="fatigue-bar-fill" style="width: 0%;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="gold-container">
+                    <span class="gold-label">GOLD</span>
+                    <div class="gold-val-wrapper">
+                        <span class="gold-icon">⚜</span>
+                        <span class="gold-value" id="gold-display">0</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- DASHBOARD BODY -->
+        <section class="dashboard-body">
+            
+            <!-- LEFT PANEL: Navigation and Notifications -->
+            <aside class="side-panel">
+                <div class="system-alert-box card-glass">
+                    <div class="card-header-line">SYSTEM ANNOUNCEMENTS</div>
+                    <div class="alert-content-scroller" id="alert-scroller">
+                        <div class="alert-item system-msg">Welcome to the Daily Training Protocol.</div>
+                        <div class="alert-item urgent-msg">Missions are synchronized with local timeline.</div>
+                    </div>
+                </div>
+
+                <nav class="hud-nav" id="hud-navigation">
+                    <button class="nav-btn active" data-tab="status">
+                        <span class="btn-glow"></span>
+                        <span class="btn-text">STATUS</span>
+                    </button>
+                    <button class="nav-btn" data-tab="quests" id="quest-nav-btn">
+                        <span class="btn-glow"></span>
+                        <span class="btn-text">DAILY QUEST</span>
+                        <span class="badge hidden" id="quest-badge">!</span>
+                    </button>
+                    <button class="nav-btn" data-tab="skills">
+                        <span class="btn-glow"></span>
+                        <span class="btn-text">SKILLS TREE</span>
+                    </button>
+                    <button class="nav-btn" data-tab="shop">
+                        <span class="btn-glow"></span>
+                        <span class="btn-text">INVENTORY / SHOP</span>
+                    </button>
+                </nav>
+                
+                <!-- Quick Settings & Mute toggle -->
+                <div class="system-settings card-glass">
+                    <div class="setting-row">
+                        <span>SYSTEM VOICE</span>
+                        <label class="switch">
+                            <input type="checkbox" id="voice-toggle" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="setting-row">
+                        <span>EFFECTS AUDIO</span>
+                        <label class="switch">
+                            <input type="checkbox" id="sound-toggle" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <button id="edit-name-btn" class="flat-btn">CHANGE NAME</button>
+                    <div style="display: flex; gap: 0.5rem; margin-top: 0.5rem; width: 100%;">
+                        <button id="export-save-btn" class="flat-btn" style="flex: 1; padding: 0.35rem 0.5rem; font-size: 0.8rem; text-align: center;">EXPORT</button>
+                        <button id="import-save-btn" class="flat-btn" style="flex: 1; padding: 0.35rem 0.5rem; font-size: 0.8rem; text-align: center;">IMPORT</button>
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 0.4rem; margin-top: 0.5rem; width: 100%;">
+                        <button id="gdrive-sync-btn" class="flat-btn" style="border-color: #34a853; color: #a8e6cf; padding: 0.35rem 0.5rem; font-size: 0.8rem; text-align: center; font-weight: bold; width: 100%;">☁️ SYNC GOOGLE DRIVE</button>
+                        <button id="configure-gdrive-btn" class="flat-btn" style="padding: 0.3rem 0.5rem; font-size: 0.75rem; text-align: center; border-color: rgba(143, 160, 181, 0.2); width: 100%;">CONFIGURE DRIVE KEYS</button>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- RIGHT PANEL: Tab Contents -->
+            <article class="main-display card-glass">
+                
+                <!-- STATUS TAB -->
+                <div id="status-tab" class="tab-pane active">
+                    <div class="pane-header">
+                        <h2>HUNTER STATUS SCREEN</h2>
+                        <span class="status-rank" id="rank-display">E-RANK MECHANIC</span>
+                    </div>
+                    
+                    <div class="status-content">
+                        <!-- Left Sub-panel: Attributes allocation -->
+                        <div class="stats-allocation-section">
+                            <div class="stat-header">
+                                <h3>ABILITY ATTRIBUTES</h3>
+                                <div class="stat-points-bubble" id="points-pool-wrapper">
+                                    <span>AVAIL. STAT POINTS: </span>
+                                    <span class="points-val" id="stat-points-val">0</span>
+                                </div>
+                            </div>
+                            
+                            <div class="stats-grid">
+                                <!-- Strength -->
+                                <div class="stat-row" data-stat="str">
+                                    <div class="stat-info">
+                                        <span class="stat-name">STRENGTH (STR)</span>
+                                        <span class="stat-desc">Boosts muscular torque & exercise capacity.</span>
+                                    </div>
+                                    <div class="stat-values">
+                                        <span class="stat-base" id="stat-str">10</span>
+                                        <span class="stat-bonus" id="stat-str-bonus">+0</span>
+                                        <button class="stat-up-btn disabled" data-stat="str">+</button>
+                                    </div>
+                                </div>
+                                <!-- Agility -->
+                                <div class="stat-row" data-stat="agi">
+                                    <div class="stat-info">
+                                        <span class="stat-name">AGILITY (AGI)</span>
+                                        <span class="stat-desc">Enhances reaction speeds & mechanical assembly agility.</span>
+                                    </div>
+                                    <div class="stat-values">
+                                        <span class="stat-base" id="stat-agi">10</span>
+                                        <span class="stat-bonus" id="stat-agi-bonus">+0</span>
+                                        <button class="stat-up-btn disabled" data-stat="agi">+</button>
+                                    </div>
+                                </div>
+                                <!-- Intelligence -->
+                                <div class="stat-row" data-stat="int">
+                                    <div class="stat-info">
+                                        <span class="stat-name">INTELLIGENCE (INT)</span>
+                                        <span class="stat-desc">Governs thermodynamics, stress analysis & CAD calculations.</span>
+                                    </div>
+                                    <div class="stat-values">
+                                        <span class="stat-base" id="stat-int">10</span>
+                                        <span class="stat-bonus" id="stat-int-bonus">+0</span>
+                                        <button class="stat-up-btn disabled" data-stat="int">+</button>
+                                    </div>
+                                </div>
+                                <!-- Wisdom -->
+                                <div class="stat-row" data-stat="wis">
+                                    <div class="stat-info">
+                                        <span class="stat-name">WISDOM (WIS)</span>
+                                        <span class="stat-desc">Aids dynamic mechanism analysis & failure engineering diagnostic logic.</span>
+                                    </div>
+                                    <div class="stat-values">
+                                        <span class="stat-base" id="stat-wis">10</span>
+                                        <span class="stat-bonus" id="stat-wis-bonus">+0</span>
+                                        <button class="stat-up-btn disabled" data-stat="wis">+</button>
+                                    </div>
+                                </div>
+                                <!-- Vitality -->
+                                <div class="stat-row" data-stat="vit">
+                                    <div class="stat-info">
+                                        <span class="stat-name">VITALITY (VIT)</span>
+                                        <span class="stat-desc">Governs physical stamina & continuous design attention span.</span>
+                                    </div>
+                                    <div class="stat-values">
+                                        <span class="stat-base" id="stat-vit">10</span>
+                                        <span class="stat-bonus" id="stat-vit-bonus">+0</span>
+                                        <button class="stat-up-btn disabled" data-stat="vit">+</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right Sub-panel: Equipped items visualization -->
+                        <div class="gear-slots-section">
+                            <h3>ACTIVE ENGINEERING GEAR</h3>
+                            <div class="slots-layout">
+                                <div class="gear-slot-card" data-slot="head">
+                                    <div class="slot-icon">🛡️</div>
+                                    <div class="slot-details">
+                                        <span class="slot-name">HEAD GEAR</span>
+                                        <span class="equipped-item-title" id="equip-head">NONE</span>
+                                    </div>
+                                </div>
+                                <div class="gear-slot-card" data-slot="body">
+                                    <div class="slot-icon">🦺</div>
+                                    <div class="slot-details">
+                                        <span class="slot-name">BODY GEAR</span>
+                                        <span class="equipped-item-title" id="equip-body">NONE</span>
+                                    </div>
+                                </div>
+                                <div class="gear-slot-card" data-slot="tool">
+                                    <div class="slot-icon">🔧</div>
+                                    <div class="slot-details">
+                                        <span class="slot-name">MAIN INSTRUMENT</span>
+                                        <span class="equipped-item-title" id="equip-tool">NONE</span>
+                                    </div>
+                                </div>
+                                <div class="gear-slot-card" data-slot="accessory">
+                                    <div class="slot-icon">💍</div>
+                                    <div class="slot-details">
+                                        <span class="slot-name">ACCESSORY</span>
+                                        <span class="equipped-item-title" id="equip-accessory">NONE</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- QUESTS TAB -->
+                <div id="quests-tab" class="tab-pane">
+                    <div class="pane-header">
+                        <h2>DAILY SYSTEM QUESTS</h2>
+                        <div class="countdown-badge" id="quest-countdown-timer">00:00:00</div>
+                    </div>
+                    
+                    <div class="quest-activation-header" id="quest-calib-header">
+                        <span class="warning-text">⚠️ PROTOCOL CALIBRATION</span>
+                        <p>Core calibration complete. Your primary Level-1 quest schedule actively initiates at midnight <strong>tomorrow</strong>. A calibration quest is active today to synchronize stats.</p>
+                    </div>
+
+                    <div class="quest-scroll-container">
+                        <div class="quest-card-frame">
+                            <div class="quest-frame-top">
+                                <span class="quest-title-system">DAILY QUEST: PREPARING TO BECOME STRONGER</span>
+                                <span class="quest-difficulty">D-RANK</span>
+                            </div>
+                            
+                            <div class="quest-warning-text">
+                                WARNING: Failure to complete this daily quest will trigger the Immediate Penalty Zone Dispatch Protocol.
+                            </div>
+
+                            <div class="quest-objectives-wrapper">
+                                <div class="quest-section-header">PHYSICAL CONDITIONING</div>
+                                <div class="objectives-list" id="physical-objectives-list">
+                                    <!-- Dynamic Items -->
+                                </div>
+
+                                <div class="quest-section-header">TECHNICAL MECHANICAL ENGINEERING</div>
+                                <div class="objectives-list" id="technical-objectives-list">
+                                    <!-- Dynamic Items -->
+                                </div>
+                            </div>
+
+                            <div class="quest-rewards-wrapper">
+                                <div class="rewards-title">QUEST COMPLETION REWARDS</div>
+                                <div class="rewards-grid">
+                                    <div class="reward-box">
+                                        <span class="reward-num">XP</span>
+                                        <span class="reward-lbl" id="reward-xp-val">+150 XP</span>
+                                    </div>
+                                    <div class="reward-box">
+                                        <span class="reward-num">GOLD</span>
+                                        <span class="reward-lbl" id="reward-gold-val">+100 G</span>
+                                    </div>
+                                    <div class="reward-box">
+                                        <span class="reward-num">🎁</span>
+                                        <span class="reward-lbl">Loot Chest</span>
+                                    </div>
+                                    <div class="reward-box">
+                                        <span class="reward-num">⚡</span>
+                                        <span class="reward-lbl">Recovery</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="quest-complete-action-wrapper">
+                                <button id="claim-quest-btn" class="glowing-btn claim-btn disabled">
+                                    <span>CLAIM REWARDS</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SKILLS TAB -->
+                <div id="skills-tab" class="tab-pane">
+                    <div class="pane-header">
+                        <h2>ACTIVE & PASSIVE SKILLS</h2>
+                        <div class="skill-tokens-count">
+                            <span>SKILL UPGRADE POINTS:</span>
+                            <span class="points-val" id="skill-points-display">0</span>
+                        </div>
+                    </div>
+                    
+                    <div class="skills-scroller">
+                        <div class="skills-section">
+                            <h3>PASSIVE MECHANICAL ABILITIES</h3>
+                            <div class="skills-grid" id="passive-skills-grid">
+                                <!-- Dynamic Passive Skills -->
+                            </div>
+                        </div>
+                        
+                        <div class="skills-section" style="margin-top: 2rem;">
+                            <h3>ACTIVE SYSTEM TECHNIQUES</h3>
+                            <div class="skills-grid" id="active-skills-grid">
+                                <!-- Dynamic Active Skills -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SHOP / INVENTORY TAB -->
+                <div id="shop-tab" class="tab-pane">
+                    <div class="pane-header">
+                        <h2>INVENTORY & ARMORY STORE</h2>
+                        <span class="gold-balance-sub">GOLD: <span id="shop-gold-display">0</span> G</span>
+                    </div>
+                    
+                    <div class="shop-content-split">
+                        <!-- Left pane: Store catalog -->
+                        <div class="store-catalog-section">
+                            <h3>SYSTEM ARMORY</h3>
+                            <div class="shop-grid" id="shop-items-grid">
+                                <!-- Dynamic Shop Items -->
+                            </div>
+                        </div>
+
+                        <!-- Right pane: User inventory bags -->
+                        <div class="user-inventory-section">
+                            <h3>USER INVENTORY BAG</h3>
+                            <div class="inventory-slots" id="inventory-bag-slots">
+                                <!-- Dynamic Inventory Slots -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </article>
+        </section>
+    </main>
+
+    <!-- 3. PENALTY ZONE OVERLAY -->
+    <div id="penalty-overlay" class="penalty-overlay hidden">
+        <div class="alarm-flasher"></div>
+        <div class="penalty-content">
+            <h1 class="penalty-alert-title">🚨 WARNING: PENALTY INITIATED 🚨</h1>
+            <p class="penalty-warning-desc">You have failed to fulfill the Daily Quest parameters. You have been transported to the Penalty Zone.</p>
+            
+            <div class="penalty-quest-card">
+                <span class="penalty-quest-label">PENALTY SURVIVAL PROTOCOL</span>
+                <h2 class="penalty-quest-title">SURVIVE THE MECHANICAL DESERT</h2>
+                <p class="penalty-quest-instructions">Complete 150 squats and solve the Penalty Engineering Problem before escaping.</p>
+                
+                <div class="penalty-objectives">
+                    <div class="penalty-objective-item">
+                        <span>Squats repetitions:</span>
+                        <div class="p-counter">
+                            <span id="penalty-squats-count">0 / 150</span>
+                            <button class="small-ctr-btn" id="penalty-add-squat">+5</button>
+                        </div>
+                    </div>
+                    <div class="penalty-objective-item">
+                        <span class="engineering-prob-title">Solve Mechanical Calibration Equation:</span>
+                        <div class="penalty-math-box">
+                            <span id="penalty-math-equation">Find Shaft Torque (T) for P = 15kW at 1500 RPM:</span>
+                            <div class="input-inline">
+                                <input type="number" id="penalty-math-answer" placeholder="Torque in Nm">
+                                <button class="flat-btn" id="penalty-math-submit">SOLVE</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="penalty-timer-box">
+                <span>TIME REMAINING:</span>
+                <span class="penalty-countdown" id="penalty-countdown-timer">04:00:00</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. LOOT BOX EXCLUSIVE ANIMATION OVERLAY -->
+    <div id="lootbox-overlay" class="lootbox-overlay hidden">
+        <div class="lootbox-lights"></div>
+        <div class="lootbox-card card-glass">
+            <h2 id="lootbox-header">LOOT CHEST UNLOCKED</h2>
+            <div class="chest-box-visual" id="chest-box">🎁</div>
+            <p id="lootbox-text">Synthesizing rewards from the Daily Quest drop table...</p>
+            <div id="lootbox-reveal" class="lootbox-reveal hidden">
+                <div class="revealed-item-icon" id="loot-icon">🔧</div>
+                <h3 class="revealed-item-name" id="loot-name">Precision Calipers</h3>
+                <p class="revealed-item-stats" id="loot-stats">+2 Intelligence</p>
+            </div>
+            <button id="lootbox-close-btn" class="glowing-btn action-btn hidden">
+                <span>ADD TO INVENTORY</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- 5. DIALOG OVERLAY (FOR NAME CHANGE ETC.) -->
+    <div id="dialog-overlay" class="dialog-overlay hidden">
+        <div class="dialog-card card-glass">
+            <h3>SYSTEM INTERFACE DIALOG</h3>
+            <div class="dialog-body">
+                <p id="dialog-prompt-text">Enter your Hunter Designation:</p>
+                <input type="text" id="dialog-input" maxlength="20" placeholder="Type here...">
+            </div>
+            <div class="dialog-actions">
+                <button id="dialog-cancel-btn" class="flat-btn">CANCEL</button>
+                <button id="dialog-ok-btn" class="glowing-btn tiny-btn"><span>CONFIRM</span></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 6. SYSTEM DING & LEVEL UP OVERLAYS -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- Google Identity Services & JS Core Engine -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script src="app.js"></script>
+</body>
+</html>
