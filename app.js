@@ -1456,6 +1456,10 @@ function initGoogleDriveSync() {
             return;
         }
         
+        // Console logger to verify exact keys and prevent copy-paste cutoffs or typos
+        console.log("THE SYSTEM -> Google OAuth Client ID loaded:", gameState.gdriveClientId);
+        console.log("THE SYSTEM -> Google Cloud API Key loaded:", gameState.gdriveApiKey);
+        
         // Trigger Google OAuth2 flow using Google Identity Services client loaded dynamically
         try {
             const client = google.accounts.oauth2.initTokenClient({
