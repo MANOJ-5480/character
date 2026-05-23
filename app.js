@@ -1402,6 +1402,7 @@ function initGoogleDriveSync() {
         const input = document.getElementById("dialog-input");
         const promptText = document.getElementById("dialog-prompt-text");
         
+        input.removeAttribute("maxlength");
         promptText.innerHTML = "<strong>Google Drive Console Keys:</strong><br><br>Enter Client ID and API Key, separated by a comma (Client_ID, API_Key):";
         input.value = (gameState.gdriveClientId && gameState.gdriveApiKey) ? 
             `${gameState.gdriveClientId}, ${gameState.gdriveApiKey}` : "";
@@ -1526,6 +1527,7 @@ function initDialogEditName() {
     
     document.getElementById("edit-name-btn").addEventListener("click", () => {
         playSound("click");
+        input.maxLength = 20;
         promptText.innerText = "Enter your Hunter Designation:";
         input.value = gameState.name;
         input.placeholder = "Type name here...";
@@ -1585,6 +1587,7 @@ function initSaveSync() {
         const input = document.getElementById("dialog-input");
         const promptText = document.getElementById("dialog-prompt-text");
 
+        input.removeAttribute("maxlength");
         promptText.innerHTML = "<strong>Import System Save:</strong><br><br>Paste your scrambled backup save string below. WARNING: This will overwrite your current progress:";
         input.value = "";
         input.placeholder = "Paste scrambled code here...";
